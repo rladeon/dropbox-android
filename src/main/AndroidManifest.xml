@@ -24,6 +24,10 @@
         <activity
             android:name="com.dropbox.core.examples.android.FilesActivity"
             android:label="@string/title_activity_files" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dropbox.core.examples.android.UserActivity" />
         </activity>
 
         <activity

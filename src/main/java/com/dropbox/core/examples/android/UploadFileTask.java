@@ -1,8 +1,10 @@
 package com.dropbox.core.examples.android;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -47,6 +49,7 @@ class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected FileMetadata doInBackground(String... params) {
         String localUri = params[0];

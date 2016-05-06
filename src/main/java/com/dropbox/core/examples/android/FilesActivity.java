@@ -12,13 +12,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.List;
 
@@ -40,7 +46,7 @@ public class FilesActivity extends DropboxActivity {
 
     public final static String EXTRA_PATH = "FilesActivity_Path";
     private static final int PICKFILE_REQUEST_CODE = 1;
-
+private  Menu _menu;
     private String mPath;
     private FilesAdapter mFilesAdapter;
     private FileMetadata mSelectedFile;
@@ -88,6 +94,12 @@ public class FilesActivity extends DropboxActivity {
         recyclerView.setAdapter(mFilesAdapter);
 
         mSelectedFile = null;
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     private void launchFilePicker() {
@@ -106,7 +118,13 @@ public class FilesActivity extends DropboxActivity {
             if (resultCode == RESULT_OK) {
 
                 // This is the result of a call to launchFilePicker
-                uploadFile(data.getData().toString());
+                try {
+                    uploadFile(data.getData().toString());
+                }
+                catch(Exception e)
+                {
+                    Log.e("upload",e.toString());
+                }
             }
         }
     }
@@ -350,6 +368,47 @@ public class FilesActivity extends DropboxActivity {
                 throw new IllegalArgumentException("Invalid FileAction code: " + code);
             }
             return values[code];
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list, menu);
+        return true;
+    }
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        // enable visible icons in action bar
+        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
+            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
+                try {
+                    Field field = menu.getClass().
+                            getDeclaredField("mOptionalIconsVisible");
+                    field.setAccessible(true);
+                    field.setBoolean(menu, true);
+                } catch (Exception e) {
+                    //Logger.w(TAG, "onMenuOpened(" + featureId + ", " + menu + ")", e);
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_exit:
+                // User chose the "Settings" item, show the app settings UI...
+                finish();
+                moveTaskToBack(true);
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
     }
 }

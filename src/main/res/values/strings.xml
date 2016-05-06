@@ -3,4 +3,6 @@
     <!-- Change this to your app key -->
     <string name="app_key">5k1jxbnv68484sw</string>
     <string name="title_activity_files">Files</string>
+    <string name="action_settings">Menu</string>
+    <string name="action_exit">Quit the application</string>
 </resources>
