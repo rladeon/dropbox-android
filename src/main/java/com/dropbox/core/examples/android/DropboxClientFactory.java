@@ -2,7 +2,6 @@ package com.dropbox.core.examples.android;
 
 import com.dropbox.core.http.OkHttpRequestor;
 import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.DbxHost;
 import com.dropbox.core.DbxRequestConfig;
 
 import java.util.Locale;

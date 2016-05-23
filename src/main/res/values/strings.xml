@@ -5,6 +5,7 @@
     <string name="title_activity_files">Files</string>
     <string name="action_settings">Menu</string>
     <string name="action_exit">Quit the application</string>
-    <string name="action_logged">Connected</string>
-    <string name="action_not_logged">Not connected</string>
+    <string name="action_logged">Connect</string>
+    <string name="action_not_logged">Disconnect</string>
+    <string name="action_connected">Hello your are connected</string>
 </resources>

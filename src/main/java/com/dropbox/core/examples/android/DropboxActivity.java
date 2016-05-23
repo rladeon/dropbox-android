@@ -42,4 +42,13 @@ public abstract class DropboxActivity extends AppCompatActivity {
         String accessToken = prefs.getString("access-token", null);
         return accessToken != null;
     }
+    protected void disconnected()
+    {
+        if(hasToken()) {
+            SharedPreferences prefs = getSharedPreferences("dropbox-sample", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove("access-token");
+            editor.commit();
+        }
+    }
 }

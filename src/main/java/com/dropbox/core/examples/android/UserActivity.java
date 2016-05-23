@@ -1,7 +1,8 @@
 package com.dropbox.core.examples.android;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
-
 import java.lang.reflect.Field;
 
 
@@ -37,6 +37,7 @@ public class UserActivity extends DropboxActivity {
             @Override
             public void onClick(View v) {
                 Auth.startOAuth2Authentication(UserActivity.this, getString(R.string.app_key));
+
             }
         });
 
@@ -108,6 +109,19 @@ public class UserActivity extends DropboxActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
+
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem unregister = menu.findItem(R.id.action_not_logged);
+        MenuItem register = menu.findItem(R.id.action_logged);
+        if(hasToken())
+        {
+            unregister.setVisible(true);
+
+            register.setVisible(true);
+        }
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -116,26 +130,20 @@ public class UserActivity extends DropboxActivity {
                 finish();
                 moveTaskToBack(true);
                 return true;
+            case R.id.action_logged:
 
+                return true;
+            case R.id.action_not_logged:
+                disconnected();
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
-    }
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem unregister = menu.findItem(R.id.action_not_logged);
-        MenuItem register = menu.findItem(R.id.action_logged);
-        if(hasToken())
-        {
-            register.setVisible(true);
-        }
-        else
-        {
-            unregister.setVisible(true);
-        }
-        return true;
     }
 }

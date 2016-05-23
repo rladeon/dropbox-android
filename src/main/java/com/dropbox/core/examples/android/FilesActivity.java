@@ -46,7 +46,7 @@ public class FilesActivity extends DropboxActivity {
 
     public final static String EXTRA_PATH = "FilesActivity_Path";
     private static final int PICKFILE_REQUEST_CODE = 1;
-private  Menu _menu;
+    private  Menu _menu;
     private String mPath;
     private FilesAdapter mFilesAdapter;
     private FileMetadata mSelectedFile;
@@ -370,7 +370,20 @@ private  Menu _menu;
             return values[code];
         }
     }
-
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem unregister = menu.findItem(R.id.action_not_logged);
+        MenuItem register = menu.findItem(R.id.action_logged);
+        if(hasToken())
+        {
+            unregister.setVisible(true);
+        }
+        else
+        {
+            register.setVisible(true);
+        }
+        return true;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_list, menu);
@@ -395,6 +408,7 @@ private  Menu _menu;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent secondeActivite;
         switch (item.getItemId()) {
             case R.id.action_exit:
                 // User chose the "Settings" item, show the app settings UI...
@@ -403,6 +417,19 @@ private  Menu _menu;
                 return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_logged:
+                secondeActivite = new Intent(FilesActivity.this, UserActivity.class);
+                // Puis on lance l'intent !
+                startActivity(secondeActivite);
+                return true;
+            case R.id.action_not_logged:
+                disconnected();
+
+                secondeActivite = new Intent(FilesActivity.this, UserActivity.class);
+                finish();
+                // Puis on lance l'intent !
+                startActivity(secondeActivite);
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
